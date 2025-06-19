@@ -2,7 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const app = express();
-const port = 3000;
+const port = 3006;
 
 // Middleware
 app.use(cors());
@@ -11,8 +11,8 @@ app.use(express.json());
 // PostgreSQL connection configuration
 const pool = new Pool({
     user: 'postgres',
-    host: 'localhost',
-    database: 'asset_management',
+    host: 'postgres',
+    database: 'admin123',
     password: 'root',
     port: 5432,
 });
@@ -187,5 +187,5 @@ app.get('/api/stats', async (req, res) => {
 
 // Start server
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running at http://13.126.5.224:${port}`);
 });
