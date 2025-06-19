@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - "6561:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123        
+      POSTGRES_DB: asset_management      
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  backend:
+    build: ./Backend
+    container_name: backend
+    ports:
+      - "3006:3006"
+    depends_on:
+      - postgres
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: admin123
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: asset_management
+      PORT: 3006
+    restart: unless-stopped
+
+  employee-assets:
+    build: ./Employee-Assets
+    container_name: Employee-Assets
+    ports:
+      - "8060:80"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_API_URL: http://backend:3006
+    restart: unless-stopped
+
+  hr-assets:
+    build: ./HR-Assets
+    container_name: HR-Assets
+    ports:
+      - "8061:80"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_API_URL: http://backend:3006
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
